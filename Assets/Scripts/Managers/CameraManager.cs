@@ -36,6 +36,11 @@ public class CameraManager : MonoBehaviour
     public Texture2D MouseDragCursor;
     private bool _isMouseDragging = false;
 
+    [Header("Rotation:")]
+    public float RotationSpeed = 20f;
+    public float RotationDampening = 1f;
+    private Quaternion _targetRotation;
+
     [Header("Zoom:")]
     public float ZoomSensitivity = 30f;
     public float ZoomDampening = 1f;
@@ -58,6 +63,8 @@ public class CameraManager : MonoBehaviour
     {
         // TODO: Create actual Input Key for this button so that it can be remapped.
         _currentMovementSpeed = Input.GetKey(KeyCode.LeftControl) ? IncreasedKeyboardMovementSpeed : KeyboardMovementSpeed;
+
+        HandleRotation();
 
         HandleKeyboardMovement();
 
@@ -186,6 +193,15 @@ public class CameraManager : MonoBehaviour
 
         _cameraTransform.position = Vector3.Lerp(_cameraTransform.position, new Vector3(_cameraTransform.position.x, _currentZoom, _cameraTransform.position.z), Time.deltaTime * ZoomDampening);
          
+    }
+
+    private void HandleRotation()
+    {
+        float rotationInput = -Input.GetAxis("Camera Rotation");
+
+        _targetRotation = Quaternion.Euler(0f, rotationInput * RotationSpeed + transform.rotation.eulerAngles.y, 0f);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime * RotationDampening);
     }
 
     private void ChangeCursor()
