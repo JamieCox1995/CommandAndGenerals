@@ -36,12 +36,21 @@ public class CameraManager : MonoBehaviour
     public Texture2D MouseDragCursor;
     private bool _isMouseDragging = false;
 
+    [Header("Zoom:")]
+    public float ZoomSensitivity = 30f;
+    public float ZoomDampening = 1f;
+    [SerializeField] private float _mouseScrollDeadzone = 0.075f;
+    public float MinimumZoom;
+    public float MaximumZoom;
+    private float _currentZoom;
+
     private Camera _camera;
 
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;
+        _cameraTransform = _camera.transform;
     }
 
     // Update is called once per frame
@@ -55,6 +64,8 @@ public class CameraManager : MonoBehaviour
         HandleEdgeScrolling();
 
         HandleMouseDragging();
+
+        HandleZoom();
 
         transform.position = Vector3.Lerp(transform.position, _targetCameraPosition, Time.deltaTime * CameraMovementResponsivness);
 
@@ -158,6 +169,23 @@ public class CameraManager : MonoBehaviour
                 _isMouseDragging = true;
             }
         }
+    }
+
+    private void HandleZoom()
+    {
+        float zoomInput = -Input.GetAxis("Mouse ScrollWheel");                                                                                                                                                                                                                                       Input.GetAxis("Mouse ScrollWheel");
+
+        if(Mathf.Abs(zoomInput) < _mouseScrollDeadzone)
+        {
+            return;
+        }
+
+        _currentZoom = _cameraTransform.position.y + zoomInput * ZoomSensitivity;
+
+        _currentZoom = Mathf.Clamp(_currentZoom, MinimumZoom, MaximumZoom);
+
+        _cameraTransform.position = Vector3.Lerp(_cameraTransform.position, new Vector3(_cameraTransform.position.x, _currentZoom, _cameraTransform.position.z), Time.deltaTime * ZoomDampening);
+         
     }
 
     private void ChangeCursor()
