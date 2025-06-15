@@ -47,6 +47,7 @@ public class SelectionManager : MonoBehaviour
                         if(!_selectedEntities.ContainsKey(ent.ID))
                         {
                             _selectedEntities.Add(ent.ID, ent);
+                            ent.SelectEntity();
                         }
 
                         break;
@@ -57,6 +58,7 @@ public class SelectionManager : MonoBehaviour
                         if (!_selectedEntities.ContainsKey(ent.ID))
                         {
                             _selectedEntities.Add(ent.ID, ent);
+                            ent.SelectEntity();
                         }
 
                         break;
@@ -67,6 +69,7 @@ public class SelectionManager : MonoBehaviour
                         if (_selectedEntities.ContainsKey(ent.ID))
                         {
                             _selectedEntities.Remove(ent.ID);
+                            ent.DeslectEntity();
                         }
 
                         break;
