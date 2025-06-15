@@ -44,9 +44,13 @@ public class CameraManager : MonoBehaviour
     [Header("Zoom:")]
     public float ZoomSensitivity = 30f;
     public float ZoomDampening = 1f;
+    [Space]
     [SerializeField] private float _mouseScrollDeadzone = 0.075f;
     public float MinimumZoom;
     public float MaximumZoom;
+
+    [Space]
+    public bool LookAtCameraCentre = true;
     private float _currentZoom;
 
     private Camera _camera;
@@ -56,6 +60,8 @@ public class CameraManager : MonoBehaviour
     {
         _camera = Camera.main;
         _cameraTransform = _camera.transform;
+
+        _currentZoom = Mathf.Clamp(_currentZoom, MinimumZoom, MaximumZoom);
     }
 
     // Update is called once per frame
@@ -180,19 +186,22 @@ public class CameraManager : MonoBehaviour
 
     private void HandleZoom()
     {
-        float zoomInput = -Input.GetAxis("Mouse ScrollWheel");                                                                                                                                                                                                                                       Input.GetAxis("Mouse ScrollWheel");
+        _cameraTransform.position = Vector3.Lerp(_cameraTransform.position, new Vector3(_cameraTransform.position.x, _currentZoom, _cameraTransform.position.z), Time.deltaTime * ZoomDampening);
 
-        if(Mathf.Abs(zoomInput) < _mouseScrollDeadzone)
+        if (LookAtCameraCentre)
+        {
+            _cameraTransform.LookAt(transform.position);
+        }
+
+        float zoomInput = -Input.GetAxis("Mouse ScrollWheel");                                                                                                                                                                                                                                       Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(zoomInput) < _mouseScrollDeadzone)
         {
             return;
         }
 
         _currentZoom = _cameraTransform.position.y + zoomInput * ZoomSensitivity;
 
-        _currentZoom = Mathf.Clamp(_currentZoom, MinimumZoom, MaximumZoom);
-
-        _cameraTransform.position = Vector3.Lerp(_cameraTransform.position, new Vector3(_cameraTransform.position.x, _currentZoom, _cameraTransform.position.z), Time.deltaTime * ZoomDampening);
-         
+        _currentZoom = Mathf.Clamp(_currentZoom, MinimumZoom, MaximumZoom); 
     }
 
     private void HandleRotation()
