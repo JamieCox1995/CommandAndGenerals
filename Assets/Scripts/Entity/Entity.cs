@@ -6,7 +6,10 @@ using UnityEngine;
 public class Entity : MonoBehaviour, ISelectableEntity
 {
     public int ID { get { return _id; } }
-    [SerializeField] private int _id;
+    private int _id;
+
+    public int TeamIndex { get { return _teamIndex; } }
+    private int _teamIndex;
 
     [SerializeField] private GameObject _selectedVisual;
 
@@ -16,9 +19,10 @@ public class Entity : MonoBehaviour, ISelectableEntity
         _selectedVisual.gameObject.SetActive(false);
     }
 
-    public virtual void InitializeEntity(int _ID)
+    public virtual void InitializeEntity(int _ID, int _TeamIndex = 0)
     {
-        _id = _ID;
+        _id = _ID; 
+        _teamIndex = _TeamIndex;
     }
 
     public void DeslectEntity()
