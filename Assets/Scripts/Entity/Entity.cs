@@ -16,6 +16,11 @@ public class Entity : MonoBehaviour, ISelectableEntity
         _selectedVisual.gameObject.SetActive(false);
     }
 
+    public virtual void InitializeEntity(int _ID)
+    {
+        _id = _ID;
+    }
+
     public void DeslectEntity()
     {
         _selectedVisual.gameObject.SetActive(false);
