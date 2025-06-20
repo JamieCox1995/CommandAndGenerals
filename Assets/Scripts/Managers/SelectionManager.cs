@@ -23,6 +23,8 @@ public class SelectionManager : MonoBehaviour
         {
             OnLeftClick();
         }
+
+        HandleSelectionModeInput();
     }
 
     public void OnLeftClick()
@@ -104,6 +106,22 @@ public class SelectionManager : MonoBehaviour
         _selectedEntities = new Dictionary<int, Entity>();
 
         _mainCamera = Camera.main;
+    }
+
+    private void HandleSelectionModeInput()
+    {
+        if (Input.GetButton("Selection Mode - Additive"))
+        {
+            _selectionMode = EntitySelectionMode.Additive;
+        }
+        else if (Input.GetButton("Selection Mode - Subtractive"))
+        {
+            _selectionMode = EntitySelectionMode.Subtractive;
+        }
+        else
+        {
+            _selectionMode = EntitySelectionMode.Normal;
+        }
     }
 
     private void DeselectEntityList()
