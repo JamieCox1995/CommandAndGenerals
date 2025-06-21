@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -132,5 +133,10 @@ public class SelectionManager : MonoBehaviour
         }
 
         _selectedEntities = new Dictionary<int, Entity>();
+    }
+
+    public static List<Entity> GetSelectedEntities()
+    {
+        return SelectionManager.Instance._selectedEntities.Values.ToList();
     }
 }
