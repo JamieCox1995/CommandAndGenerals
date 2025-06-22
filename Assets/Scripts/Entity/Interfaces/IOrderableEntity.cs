@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 public interface IOrderableEntity
 {
-    public void IssueOrder();
+    public void IssueOrder(EntityOrder _Order);
 }

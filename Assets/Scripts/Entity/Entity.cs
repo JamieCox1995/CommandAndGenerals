@@ -15,7 +15,6 @@ public class Entity : MonoBehaviour, ISelectableEntity
 
     protected virtual void Start()
     {
-        //_selectedVisual = gameObject.FindComponentInChildWithTag<Transform>("Entity Selection").gameObject;
         _selectedVisual.gameObject.SetActive(false);
     }
 

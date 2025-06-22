@@ -37,7 +37,9 @@ public class SelectionManager : MonoBehaviour
 
         if(Physics.Raycast(cameraRay, out hit))
         {
-            if(hit.collider.gameObject.TryGetComponent(out Entity ent))
+            Entity ent = hit.collider.gameObject.GetComponentInParent<Entity>();
+
+            if (ent != null)
             {
                 // If we are over a selectable entity;
                 switch (_selectionMode)
@@ -138,5 +140,10 @@ public class SelectionManager : MonoBehaviour
     public static List<Entity> GetSelectedEntities()
     {
         return SelectionManager.Instance._selectedEntities.Values.ToList();
+    }
+
+    public static List<Unit> GetOrderableUnitsFromSelection()
+    {
+        return GetSelectedEntities().Select(unit => unit as Unit).Where(unit => unit != null).ToList();
     }
 }
