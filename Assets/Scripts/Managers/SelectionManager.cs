@@ -2,14 +2,23 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class SelectionManager : MonoBehaviour
 {
     public static SelectionManager Instance;
 
+    public Image UIMouseDrag;
+
     private Dictionary<int, Entity> _selectedEntities = new Dictionary<int, Entity>();
-    [SerializeField] private EntitySelectionMode _selectionMode = EntitySelectionMode.Normal;
+    private EntitySelectionMode _selectionMode = EntitySelectionMode.Normal;
+
     private Camera _mainCamera;
+    private Vector2 _mouseDragStartLocation;
+    private Vector2 _mouseCurrentDragLocation;
+    private bool _isMouseHeldDown = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -20,11 +29,13 @@ public class SelectionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            OnLeftClick();
-        }
+        // Detecting input from the mouse
+        HandleMouseClicks();
 
+        HandleMouseDrag();
+
+
+        // Detecting input from the player to change the type of unit selection.
         HandleSelectionModeInput();
     }
 
@@ -125,6 +136,67 @@ public class SelectionManager : MonoBehaviour
         {
             _selectionMode = EntitySelectionMode.Normal;
         }
+    }
+
+    private void HandleMouseClicks()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnLeftClick();
+        }
+
+
+        // If we are holding down the mouse button, we want to draw a box to screen to represent a drag selection.
+        if (Input.GetMouseButton(0))
+        {
+            // If we were not holding the mouse button down last frame
+            if (!_isMouseHeldDown)
+            {
+                // Capture the position of the mouse this frame
+                _mouseDragStartLocation = Input.mousePosition;
+                // and mark that we are holding the mouse down.
+                _isMouseHeldDown = true;
+            }
+
+            // We then want to capture the current mouse's position.
+            _mouseCurrentDragLocation = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            //Reset all of the variables which we were using to determine the size of the drag selection.
+            _isMouseHeldDown = false;
+            _mouseDragStartLocation = Vector2.zero;
+            _mouseCurrentDragLocation = Vector2.zero;
+        }
+    }
+
+    private void HandleMouseDrag()
+    {
+        if (_isMouseHeldDown) 
+        {
+            // Enabling the UI element for the box
+            UIMouseDrag.gameObject.SetActive(true);
+
+            // Getting the size we want based off of where we started dragging the mouse and where the mouse currently is
+            float width = _mouseCurrentDragLocation.x - _mouseDragStartLocation.x;
+            float height = _mouseCurrentDragLocation.y - _mouseDragStartLocation.y;
+
+            // Calculating where the anchor location of the Sprite is based on the freshly calculated width/height so that it is in the centre.
+            UIMouseDrag.rectTransform.anchoredPosition = _mouseDragStartLocation + new Vector2(width / 2, height / 2);
+            // Now to just set the size. Using the Absolute size so that we get the proper size of the object.
+            UIMouseDrag.rectTransform.sizeDelta= new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+
+            // Now we can try selecting the units that are inside the bounds of the selection.
+            // Creating a Bounding Box
+            Bounds selectionBounds = new Bounds(UIMouseDrag.rectTransform.anchoredPosition, UIMouseDrag.rectTransform.sizeDelta);
+        }
+        else
+        {
+            UIMouseDrag.gameObject.SetActive(false);
+        }
+
+
     }
 
     private void DeselectEntityList()

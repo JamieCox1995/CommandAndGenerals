@@ -87,6 +87,7 @@ public class CameraManager : MonoBehaviour
 
     private void HandleKeyboardMovement()
     {
+        // Obviously, if we have not enabled the Keyboard movement we do not want to try to run any of the below logic to move the camera via keyboard controls
         if (!AllowKeyboardMovement) return;
 
         // Creating a Vector2 to store the input from the player.
@@ -96,6 +97,7 @@ public class CameraManager : MonoBehaviour
             y = Input.GetAxis("Vertical")
         };
 
+        // Updating the cameras location based off of the input vector we just created.
         _targetCameraPosition += (transform.forward * input.y * _keyboardMoveSensitivity);
         _targetCameraPosition += (transform.right * input.x * _keyboardMoveSensitivity);
     }
