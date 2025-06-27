@@ -190,6 +190,33 @@ public class SelectionManager : MonoBehaviour
             // Now we can try selecting the units that are inside the bounds of the selection.
             // Creating a Bounding Box
             Bounds selectionBounds = new Bounds(UIMouseDrag.rectTransform.anchoredPosition, UIMouseDrag.rectTransform.sizeDelta);
+
+            List<Entity> entities = EntityManager.Instance.GetAllEntities();
+
+            for(int index = 0; index < entities.Count; index++)
+            {
+                // Getting the screen location of the current entity
+                Entity ent = entities[index];
+                Vector2 screenPos = Camera.main.WorldToScreenPoint(ent.gameObject.transform.position);
+
+                // Now we want to check to see if the current entity's location is within the selection bounds.
+                if(IsEntityInSelection(screenPos, selectionBounds))
+                {
+                    if (!_selectedEntities.ContainsKey(ent.ID))
+                    {
+                        _selectedEntities.Add(ent.ID, ent);
+                        ent.SelectEntity();
+                    }
+                }
+                else
+                {
+                    if (_selectedEntities.ContainsKey(ent.ID))
+                    {
+                        _selectedEntities.Remove(ent.ID);
+                        ent.DeslectEntity();
+                    }
+                }
+            }
         }
         else
         {
@@ -197,6 +224,12 @@ public class SelectionManager : MonoBehaviour
         }
 
 
+    }
+
+    private bool IsEntityInSelection(Vector2 _EntityScreenLocation, Bounds _SelectionBounds)
+    {
+        return _EntityScreenLocation.x >= _SelectionBounds.min.x && _EntityScreenLocation.x <= _SelectionBounds.max.x
+                && _EntityScreenLocation.y >= _SelectionBounds.min.y && _EntityScreenLocation.y <= _SelectionBounds.max.y;
     }
 
     private void DeselectEntityList()

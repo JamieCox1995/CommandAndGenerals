@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EntityManager : MonoBehaviour
@@ -14,6 +15,15 @@ public class EntityManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+
         // On Start, we want to initialize the list of Entities that have been spawned.
         _spawnedEntities = new List<Entity>(MAX_ENTITY_COUNT);
     }
@@ -61,5 +71,15 @@ public class EntityManager : MonoBehaviour
 
         spawnedEntity.InitializeEntity(_SpawnedIndex);
         return true;
+    }
+
+    public List<Entity> GetAllEntities()
+    {
+        return _spawnedEntities;
+    }
+
+    public Entity GetEntity(int _EntityID)
+    {
+        return _spawnedEntities.FirstOrDefault(e => e.ID == _EntityID);
     }
 }
