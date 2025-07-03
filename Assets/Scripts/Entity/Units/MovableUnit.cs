@@ -5,12 +5,16 @@ using UnityEngine.AI;
 
 public class MovableUnit : Unit
 {
-    private NavMeshAgent _agent;
+    public float Speed = 5f;
+
+    protected NavMeshAgent _agent;
+    protected Vector3 _targetLocation;
 
     // Start is called before the first frame update
     void Start()
     {
         _agent = GetComponentInChildren<NavMeshAgent>();
+        _agent.speed = Speed;
     }
 
     // Update is called once per frame
@@ -21,7 +25,7 @@ public class MovableUnit : Unit
 
     public override bool IssueMoveToCommand(Vector3 _TargetLocation)
     {
-        _agent.SetDestination(_TargetLocation);
+        _targetLocation = _TargetLocation;
 
         return true;
     }
@@ -37,7 +41,15 @@ public class MovableUnit : Unit
 
     public override void CheckMoveCommandComplete()
     {
-        if(Vector3.Distance(transform.position, _agent.destination) <= 0.2)
+        if(_agent.destination != _targetLocation)
+        {
+            _agent.destination = _targetLocation;
+        }
+
+        // Do Move Logic in Here?
+
+
+        if(Vector3.Distance(transform.position, _targetLocation) <= 0.2)
         {
             _currentOrder = null;
         }

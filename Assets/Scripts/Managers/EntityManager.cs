@@ -73,6 +73,28 @@ public class EntityManager : MonoBehaviour
         return true;
     }
 
+    public Entity SpawnEntity(int _RequestedIndex, Vector3 _SpawnLocation, out bool _SpawnSuccess)
+    {
+        if(SpawnableEntities.Count < _RequestedIndex)
+        {
+            _SpawnSuccess = false;
+            return null;
+        }
+
+        if (_spawnedEntities.Count >= MAX_ENTITY_COUNT)
+        {
+            _SpawnSuccess = false;
+            return null;
+        }
+
+        Entity spawnedEntity = Instantiate(SpawnableEntities[_RequestedIndex], _SpawnLocation, Quaternion.identity);
+        _spawnedEntities.Add(spawnedEntity);
+
+        spawnedEntity.InitializeEntity(_spawnedEntities.Count);
+        _SpawnSuccess = true;
+        return spawnedEntity;
+    }
+
     public List<Entity> GetAllEntities()
     {
         return _spawnedEntities;
@@ -81,5 +103,10 @@ public class EntityManager : MonoBehaviour
     public Entity GetEntity(int _EntityID)
     {
         return _spawnedEntities.FirstOrDefault(e => e.ID == _EntityID);
+    }
+
+    public Vector3 GetEntityBoundingBox(int _EntityID)
+    {
+        return SpawnableEntities[_EntityID].gameObject.GetComponentInChildren<Collider>().bounds.size;
     }
 }

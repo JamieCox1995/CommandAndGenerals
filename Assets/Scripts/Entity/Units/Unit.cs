@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class Unit : Entity, IOrderableEntity
 {
+    public int StartingHitPoints = 100;
+
+    public int RemainingHitPoints { get { return _remainingHitPoints; } }
+    protected int _remainingHitPoints = 0;
+
     protected Queue<EntityOrder> _orders = new Queue<EntityOrder>();
     protected EntityOrder _currentOrder;
 
@@ -19,39 +24,37 @@ public class Unit : Entity, IOrderableEntity
     {
         if(_currentOrder == null && _orders.Count > 0)
         {
-            Debug.Log("Getting next order");
             _currentOrder = _orders.Dequeue();
         }
 
         if (_currentOrder == null) return;
 
-        switch(_currentOrder.OrderName)
-        {
-            case "moveTo":
-                // When we recieve a move to order, we want set the navigation mesh agent's target
-                string[] loc = _currentOrder.OrderParameters.Split(',');
-                Vector3 targetLoc = new Vector3
-                {
-                    x = (float)Convert.ToDecimal(loc[0].Replace("(", "")),
-                    y = (float)Convert.ToDecimal(loc[1]),
-                    z = (float)Convert.ToDecimal(loc[2].Replace(")", ""))
-                };
-
-                IssueMoveToCommand(targetLoc);
-                break;
-
-            default:
-                Debug.LogWarning($"Unit {ID} does not have a handler for the current order type: {_currentOrder.OrderName}");
-                break;
-        }
+        HandleCommand();
 
         CheckCommandCompletion();
     }
 
     public void IssueOrder(EntityOrder _Order)
-    {
-        Debug.Log($"Passed Order: \n{_Order.OrderName}, {_Order.OrderParameters}");
+    {     
         _orders.Enqueue( _Order );
+    }
+
+    public virtual void HandleCommand()
+    {
+        switch (_currentOrder.OrderName)
+        {
+            case "moveTo":
+                // When we recieve a move to order, we want set the navigation mesh agent's target
+                _currentOrder.Parameters.TryGetValue("destination", out object location);
+
+                IssueMoveToCommand((Vector3)location);
+                break;
+
+            default:
+                Debug.LogWarning($"Unit {ID} does not have a handler for the current order type: {_currentOrder.OrderName}");
+                _currentOrder = null;
+                break;
+        }
     }
 
     public virtual bool IssueMoveToCommand(Vector3 _TargetLocation)
@@ -84,5 +87,17 @@ public class Unit : Entity, IOrderableEntity
     public virtual void CheckAttackMoveCompleted()
     {
 
+    }
+
+    public virtual void TakeDamage(int _Damage)
+    {
+        _remainingHitPoints -= _Damage;
+
+        _remainingHitPoints = Mathf.Clamp(_remainingHitPoints, 0, StartingHitPoints);
+
+        if(_remainingHitPoints == 0)
+        {
+            Debug.Log("Unit Dead");
+        }
     }
 }
