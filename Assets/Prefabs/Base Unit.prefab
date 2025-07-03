@@ -238,7 +238,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _selectedVisual: {fileID: 8706607111272322717}
-  Speed: 10
+  StartingHitPoints: 100
+  Speed: 3
 --- !u!195 &2456613180896267643
 NavMeshAgent:
   m_ObjectHideFlags: 0

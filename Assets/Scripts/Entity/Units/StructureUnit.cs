@@ -5,7 +5,18 @@ using UnityEngine.AI;
 
 public class StructureUnit : Unit
 {
+
+    private bool _isConstructed = false;
+
     [SerializeField] private GameObject _rallyMarker;
+
+    public override void HandleCommand()
+    {
+        if(_isConstructed)
+        {
+            base.HandleCommand();
+        }
+    }
 
     public override bool IssueMoveToCommand(Vector3 _TargetLocation)
     {
@@ -20,5 +31,15 @@ public class StructureUnit : Unit
     public override void CheckMoveCommandComplete()
     {
         _currentOrder = null;
+    }
+
+    public override void TakeDamage(int _Damage)
+    {
+        base.TakeDamage(_Damage);
+
+        if(!_isConstructed && _remainingHitPoints == StartingHitPoints)
+        {
+            _isConstructed = true;
+        }
     }
 }

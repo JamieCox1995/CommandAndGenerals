@@ -41,6 +41,8 @@ public class Unit : Entity, IOrderableEntity
 
     public virtual void HandleCommand()
     {
+        if (_currentOrder == null) return;
+
         switch (_currentOrder.OrderName)
         {
             case "moveTo":

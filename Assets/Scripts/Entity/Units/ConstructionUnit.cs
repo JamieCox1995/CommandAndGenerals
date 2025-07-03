@@ -8,7 +8,7 @@ public class ConstructionUnit : MovableUnit
 
 
     private int _constructionEntityID = -1;
-    private Unit _structure;
+    private StructureUnit _structure;
     protected bool _constructionStarted = false;
 
     public override void HandleCommand()
@@ -36,7 +36,7 @@ public class ConstructionUnit : MovableUnit
                 // Otherwise we can issue the order. We basically want to
                 Vector3 buildLocation = (Vector3)_currentOrder.Parameters["location"];
                 int entityId = (int)_currentOrder.Parameters["EntityID"];
-                _structure = (Unit)_currentOrder.Parameters["structure"];
+                _structure = (StructureUnit)_currentOrder.Parameters["structure"];
 
                 IssueBuildCommand(buildLocation, entityId);
 
