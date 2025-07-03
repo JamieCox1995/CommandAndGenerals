@@ -7,7 +7,7 @@ using UnityEngine;
 public class EntityOrder
 {
     public string OrderName;
-    public string OrderParameters;
+    public Dictionary<string, object> Parameters;
 
     public int OrderPriority;
 }
