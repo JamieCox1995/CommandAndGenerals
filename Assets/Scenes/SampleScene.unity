@@ -199,7 +199,6 @@ MonoBehaviour:
   SpawnableEntities:
   - {fileID: 1801572893302563559, guid: 6363c05255bdace4c9141ced99e2d424, type: 3}
   - {fileID: 36462257194882036, guid: 9db24d836b8c87f4cae6df1aeac08829, type: 3}
---- !u!4 &518358709
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
