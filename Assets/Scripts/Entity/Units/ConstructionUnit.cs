@@ -6,6 +6,8 @@ public class ConstructionUnit : MovableUnit
 {
     public List<int> BuildOptions = new List<int>();
 
+    public float ConstructionDelay = 1.5f;
+    public int ConstructionAmountPerCycle = 20;
 
     private int _constructionEntityID = -1;
     private StructureUnit _structure;
@@ -93,22 +95,11 @@ public class ConstructionUnit : MovableUnit
     {
         _constructionStarted = true;
 
-        // We want to run this whilst we wait for the target structure to be built.
-        //_structure = (Unit)EntityManager.Instance.SpawnEntity(_constructionEntityID, _targetLocation, out bool spawnSuccess);
-
-        //// If we were not able to spawn the entity, we set the current order equal to null and break out of the coroutine.
-        //if(!spawnSuccess)
-        //{
-        //    _currentOrder = null;
-        //    yield break;
-        //}
-
         // As we know the Structure should have been spawned we can start updating the hit points.
         while(_structure.RemainingHitPoints != _structure.StartingHitPoints)
         {
-            _structure.TakeDamage(-20);
-
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(ConstructionDelay);
+            _structure.TakeDamage(-ConstructionAmountPerCycle);
         }
 
         _constructionStarted = false;

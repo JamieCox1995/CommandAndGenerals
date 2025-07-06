@@ -10,6 +10,18 @@ public class StructureUnit : Unit
 
     [SerializeField] private GameObject _rallyMarker;
 
+    protected override void Start()
+    {
+        base.Start();
+
+
+        if(!_isConstructed)
+        {
+            UserInterfaceManager.ShowConstructionDisplay(this);
+        }
+
+    }
+
     public override void HandleCommand()
     {
         if(_isConstructed)
@@ -37,9 +49,17 @@ public class StructureUnit : Unit
     {
         base.TakeDamage(_Damage);
 
-        if(!_isConstructed && _remainingHitPoints == StartingHitPoints)
+        if(!_isConstructed)
         {
-            _isConstructed = true;
+            if(_remainingHitPoints == StartingHitPoints)
+            {
+                UserInterfaceManager.DestroyConstructionDisplay(this);
+                _isConstructed = true;
+            }
+            else
+            {
+                UserInterfaceManager.UpdateConstructionDisplay(this);
+            }
         }
     }
 }
