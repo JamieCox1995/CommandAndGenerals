@@ -165,6 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _selectedVisual: {fileID: 4111077349969337033}
   StartingHitPoints: 100
+  StartsAtFullHealth: 0
   _rallyMarker: {fileID: 7930151216547342002}
 --- !u!208 &6384822250850038746
 NavMeshObstacle:

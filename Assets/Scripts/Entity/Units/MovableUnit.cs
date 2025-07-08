@@ -15,6 +15,11 @@ public class MovableUnit : Unit
     {
         _agent = GetComponentInChildren<NavMeshAgent>();
         _agent.speed = Speed;
+
+        if (StartsAtFullHealth)
+        {
+            _remainingHitPoints = StartingHitPoints;
+        }
     }
 
     // Update is called once per frame

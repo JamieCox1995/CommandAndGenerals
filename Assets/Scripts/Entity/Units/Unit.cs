@@ -10,6 +10,8 @@ public class Unit : Entity, IOrderableEntity
     public int RemainingHitPoints { get { return _remainingHitPoints; } }
     protected int _remainingHitPoints = 0;
 
+    public bool StartsAtFullHealth = true;
+
     protected Queue<EntityOrder> _orders = new Queue<EntityOrder>();
     protected EntityOrder _currentOrder;
 
@@ -17,6 +19,11 @@ public class Unit : Entity, IOrderableEntity
     protected override void Start()
     {
         base.Start();
+
+        if(StartsAtFullHealth)
+        {
+            _remainingHitPoints = StartingHitPoints;
+        }
     }
 
     // Update is called once per frame
@@ -97,8 +104,11 @@ public class Unit : Entity, IOrderableEntity
 
         _remainingHitPoints = Mathf.Clamp(_remainingHitPoints, 0, StartingHitPoints);
 
+        UserInterfaceManager.DisplayUnitStatistics(this);
+
         if(_remainingHitPoints == 0)
         {
+            UserInterfaceManager.DestroyUnitDisplay(this);
             Debug.Log("Unit Dead");
         }
     }

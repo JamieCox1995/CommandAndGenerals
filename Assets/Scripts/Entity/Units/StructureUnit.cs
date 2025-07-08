@@ -47,9 +47,16 @@ public class StructureUnit : Unit
 
     public override void TakeDamage(int _Damage)
     {
-        base.TakeDamage(_Damage);
+        _remainingHitPoints -= _Damage;
 
-        if(!_isConstructed)
+        _remainingHitPoints = Mathf.Clamp(_remainingHitPoints, 0, StartingHitPoints);
+
+        if (_remainingHitPoints == 0)
+        {
+            Debug.Log("Unit Dead");
+        }
+
+        if (!_isConstructed)
         {
             if(_remainingHitPoints == StartingHitPoints)
             {

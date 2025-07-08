@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class UserInterfaceManager : MonoBehaviour
@@ -9,10 +10,10 @@ public class UserInterfaceManager : MonoBehaviour
 
     [Header("Interface Prefabs")]
     public GameObject ConstructionDisplayPrefab;
-
-
+    public GameObject HealthDisplayPrefab;
     public Dictionary<Unit, GameObject> UnitInterfaces = new Dictionary<Unit, GameObject>();
 
+    private Camera _mainCamera;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,8 @@ public class UserInterfaceManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        _mainCamera = Camera.main;
     }
 
     // Update is called once per frame
@@ -38,7 +41,7 @@ public class UserInterfaceManager : MonoBehaviour
         foreach(KeyValuePair<Unit, GameObject> kvp in UnitInterfaces)
         {
             // Get the World -> Camera Space Position of the current unit.
-            Vector3 cameraSpace = Camera.main.WorldToScreenPoint(kvp.Key.transform.position);
+            Vector3 cameraSpace = _mainCamera.WorldToScreenPoint(kvp.Key.transform.position);
 
             if(kvp.Value.TryGetComponent(out UserInterfaceOffset offset))
             {
@@ -53,16 +56,50 @@ public class UserInterfaceManager : MonoBehaviour
     {
         if (Instance.UnitInterfaces.ContainsKey(_Unit))
         {
+            UpdateUnitStatistics(_Unit);
             return;
         }
+
+        // Spawning the Prefab in the world.
+        GameObject spawned = Instantiate(Instance.HealthDisplayPrefab, Instance.transform);
+        Instance.UnitInterfaces.Add(_Unit, spawned);
+
+        float amount = (float)_Unit.RemainingHitPoints / _Unit.StartingHitPoints;
+
+        Slider healthSlider = spawned.GetComponentInChildren<Slider>();
+        healthSlider.value = amount;
+
+        UnitHealthDisplay uhd = spawned.GetComponent<UnitHealthDisplay>();
+        Color c = uhd.HealthGradient.Evaluate(amount);
+        healthSlider.fillRect.GetComponent<Image>().color = c;
     }
 
-    public static void DestroyUnitDispaly(Unit _Unit)
+    public static void UpdateUnitStatistics(Unit _Unit)
+    {
+        if (!Instance.UnitInterfaces.ContainsKey(_Unit))
+        {
+            return;
+        }
+        GameObject ui = Instance.UnitInterfaces[_Unit];
+        float amount = (float)_Unit.RemainingHitPoints / _Unit.StartingHitPoints;
+
+        Slider healthSlider = ui.GetComponentInChildren<Slider>();
+        healthSlider.value = amount;
+
+        UnitHealthDisplay uhd = ui.GetComponent<UnitHealthDisplay>();
+        Color c = uhd.HealthGradient.Evaluate(amount);
+        healthSlider.fillRect.GetComponent<Image>().color = c;
+    }
+
+    public static void DestroyUnitDisplay(Unit _Unit)
     {
         if(!Instance.UnitInterfaces.ContainsKey(_Unit))
         {
             return;
         }
+
+        Destroy(Instance.UnitInterfaces[_Unit]);
+        Instance.UnitInterfaces.Remove(_Unit);
     }
 
     public static void ShowConstructionDisplay(Unit _Unit)

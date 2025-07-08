@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConstructionDisplayPrefab: {fileID: 1328129530487253207, guid: b94c9b9aa4b016a4a9d5d7d23404f1ca, type: 3}
+  HealthDisplayPrefab: {fileID: 1861377860241694781, guid: 6e772a70fab096b43a7431439ca5329e, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,7 +1444,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 10dc85acc8c91ff42b0eaf7090384883, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 20.48
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 10dc85acc8c91ff42b0eaf7090384883, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1451,7 +1452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 10dc85acc8c91ff42b0eaf7090384883, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 33.27
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 10dc85acc8c91ff42b0eaf7090384883, type: 3}
       propertyPath: m_LocalRotation.w
