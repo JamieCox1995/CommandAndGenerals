@@ -34,7 +34,7 @@ public class Unit : Entity, IOrderableEntity
             _currentOrder = _orders.Dequeue();
         }
 
-        if (_currentOrder == null) return;
+        if (_currentOrder == null || string.IsNullOrWhiteSpace(_currentOrder.OrderName)) return;
 
         HandleCommand();
 

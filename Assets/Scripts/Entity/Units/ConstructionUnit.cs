@@ -15,6 +15,8 @@ public class ConstructionUnit : MovableUnit
 
     public override void HandleCommand()
     {
+        if (_currentOrder == null || string.IsNullOrWhiteSpace(_currentOrder.OrderName)) return;
+
         switch (_currentOrder.OrderName)
         {
             case "moveTo":

@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class StructureUnit : Unit
 {
-
     private bool _isConstructed = false;
 
     [SerializeField] private GameObject _rallyMarker;
@@ -19,7 +18,6 @@ public class StructureUnit : Unit
         {
             UserInterfaceManager.ShowConstructionDisplay(this);
         }
-
     }
 
     public override void HandleCommand()
