@@ -5,9 +5,10 @@ using UnityEngine.AI;
 
 public class StructureUnit : Unit
 {
-    private bool _isConstructed = false;
+    protected bool _isConstructed = false;
 
-    [SerializeField] private GameObject _rallyMarker;
+    [SerializeField] protected GameObject _rallyMarker;
+    protected bool _rallyMarkerIsSet = false;
 
     protected override void Start()
     {
@@ -35,6 +36,7 @@ public class StructureUnit : Unit
 
         //TODO: We should check that the _TargetLocation is a valid location to set the Rally Marker to.
         _rallyMarker.transform.position = _TargetLocation;
+        _rallyMarkerIsSet = true;
         return true;
     }
 

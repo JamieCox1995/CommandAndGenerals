@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct ProductionProfile
+public class ProductionProfile
 {
     public string ProductionName;
     public float ProductionTime;
     public int ProductionEntity;
+
+    public ProductionProfile()
+    {
+
+    }
 }

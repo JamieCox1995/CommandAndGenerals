@@ -155,4 +155,58 @@ public class UserInterfaceManager : MonoBehaviour
         Destroy(Instance.UnitInterfaces[_Unit]);
         Instance.UnitInterfaces.Remove(_Unit);
     }
+
+    public static void ShowProductionDisplay(Unit _Unit)
+    {
+        // If we have already got the unit Registered, we should not add a new one as this would try an error
+        // when inserting a dupe key to a Dictionary
+        if (Instance.UnitInterfaces.ContainsKey(_Unit))
+        {
+            // Instead, we will call the update method.
+            UpdateProductionDisplay(_Unit);
+
+            // And then return;
+            return;
+        }
+
+        // Spawning the Prefab in the world.
+        GameObject spawned = Instantiate(Instance.ConstructionDisplayPrefab, Instance.transform);
+        Instance.UnitInterfaces.Add(_Unit, spawned);
+
+        TMP_Text textbox = spawned.GetComponentInChildren<TMP_Text>();
+
+        string template = textbox.text;
+
+        textbox.text = string.Format(template, "0");
+    }
+
+    public static void UpdateProductionDisplay(Unit _Unit)
+    {
+        if (!Instance.UnitInterfaces.ContainsKey(_Unit))
+        {
+            return;
+        }
+
+        // Get the UI GameObject from the Dictionary
+        GameObject ui = Instance.UnitInterfaces[_Unit];
+
+        TMP_Text textbox = ui.GetComponentInChildren<TMP_Text>();
+
+        string template = textbox.text;
+        float constructionAmount = ((float)_Unit.RemainingHitPoints / _Unit.StartingHitPoints) * 100f;
+
+        //textbox.text = string.Format(template, constructionAmount);
+        textbox.text = string.Format("Building {0}%...", constructionAmount);
+    }
+
+    public static void DestroyProductionDisplay(Unit _Unit)
+    {
+        if (!Instance.UnitInterfaces.ContainsKey(_Unit))
+        {
+            return;
+        }
+
+        Destroy(Instance.UnitInterfaces[_Unit]);
+        Instance.UnitInterfaces.Remove(_Unit);
+    }
 }

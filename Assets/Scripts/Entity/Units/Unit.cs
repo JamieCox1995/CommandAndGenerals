@@ -29,7 +29,12 @@ public class Unit : Entity, IOrderableEntity
     // Update is called once per frame
     protected virtual void Update()
     {
-        if(_currentOrder == null && _orders.Count > 0)
+        CommandStructure();
+    }
+
+    protected virtual void CommandStructure()
+    {
+        if (_currentOrder == null && _orders.Count > 0)
         {
             _currentOrder = _orders.Dequeue();
         }
