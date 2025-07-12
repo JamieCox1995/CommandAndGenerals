@@ -16,8 +16,10 @@ public class ProductionStructure : StructureUnit
 
     protected override void Update()
     {
-        base.Update();
+        if (!_isConstructed) return;
 
+        base.Update();
+     
         CheckProductionQueue();
     }
 
@@ -26,10 +28,11 @@ public class ProductionStructure : StructureUnit
     {
         switch (_currentOrder.OrderName)
         {
-            case "move":
-                _currentOrder.Parameters.TryGetValue("destination", out object location);
-
-                IssueMoveToCommand((Vector3)location);
+            case "moveTo":
+                CheckMoveCommandComplete();
+                break;
+            case "produce":
+                CheckProduceCommandComplete();
                 break;
             default:
                 break;
@@ -40,7 +43,23 @@ public class ProductionStructure : StructureUnit
     {
         if (_isConstructed)
         {
-            base.HandleCommand();
+            //base.HandleCommand();
+
+            switch(_currentOrder.OrderName)
+            {
+                case "moveTo":
+                    // When we recieve a move to order, we want set the navigation mesh agent's target
+                    _currentOrder.Parameters.TryGetValue("destination", out object location);
+
+                    IssueMoveToCommand((Vector3)location);
+                    break;
+
+                case "produce":
+                    _currentOrder.Parameters.TryGetValue("profile", out object profile);
+
+                    IssueProduceCommand((ProductionProfile)profile);
+                    break;
+        }
         }
     }
 
@@ -51,6 +70,7 @@ public class ProductionStructure : StructureUnit
 
         //TODO: We should check that the _TargetLocation is a valid location to set the Rally Marker to.
         _rallyMarker.transform.position = _TargetLocation;
+        _rallyMarkerIsSet = true;
         return true;
     }
 
@@ -78,6 +98,8 @@ public class ProductionStructure : StructureUnit
     private void CheckProductionQueue()
     {
         if (_currentProduction != null) return;
+
+        if (_productionQueue.Count == 0) return;
 
         StartCoroutine(StartProduction());
     }
@@ -110,8 +132,8 @@ public class ProductionStructure : StructureUnit
             {
                 ((Unit)entity).IssueOrder(new EntityOrder
                 {
-                    OrderName = "move",
-                    Parameters = new Dictionary<string, object> { { "destination", _rallyMarker } }
+                    OrderName = "moveTo",
+                    Parameters = new Dictionary<string, object> { { "destination", _rallyMarker.transform.position } }
                 });
             }
         }

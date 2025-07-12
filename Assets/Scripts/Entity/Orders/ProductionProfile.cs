@@ -8,9 +8,4 @@ public class ProductionProfile
     public string ProductionName;
     public float ProductionTime;
     public int ProductionEntity;
-
-    public ProductionProfile()
-    {
-
-    }
 }

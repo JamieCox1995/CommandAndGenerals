@@ -32,6 +32,34 @@ public class OrderManager : MonoBehaviour
         {
             IssueOrderToSelection();
         }
+
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _selectedOrder = new EntityOrder
+            {
+                OrderName = "produce",
+                Parameters = new Dictionary<string, object>
+                {
+                    { "profile", new ProductionProfile
+                                    {
+                                        ProductionName = "Testing",
+                                        ProductionEntity = 0,
+                                        ProductionTime = 10
+                                    }
+                    }
+                }
+            };
+
+            // Getting the list of selected entities from the Selection Manager
+            List<Unit> selectedEntities = SelectionManager.GetOrderableUnitsFromSelection();
+
+            foreach (Unit u in selectedEntities)
+            {
+                u.IssueOrder(_selectedOrder);
+            }
+
+            _selectedOrder = null;
+        }
     }
 
     private void IssueOrderToSelection()

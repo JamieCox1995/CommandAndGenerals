@@ -141,8 +141,8 @@ public class UserInterfaceManager : MonoBehaviour
         string template = textbox.text;
         float constructionAmount = ((float)_Unit.RemainingHitPoints / _Unit.StartingHitPoints) * 100f;
 
-        //textbox.text = string.Format(template, constructionAmount);
-        textbox.text = string.Format("Building {0}%...", constructionAmount);
+        textbox.text = string.Format(template, constructionAmount.ToString("N0"));
+        //textbox.text = string.Format("Building {0}%...", constructionAmount);
     }
 
     public static void DestroyConstructionDisplay(Unit _Unit)
