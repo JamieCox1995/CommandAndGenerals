@@ -11,6 +11,7 @@ public class UserInterfaceManager : MonoBehaviour
     [Header("Interface Prefabs")]
     public GameObject ConstructionDisplayPrefab;
     public GameObject HealthDisplayPrefab;
+    public GameObject ProgressDisplay;
     public Dictionary<Unit, GameObject> UnitInterfaces = new Dictionary<Unit, GameObject>();
 
     private Camera _mainCamera;
@@ -156,31 +157,28 @@ public class UserInterfaceManager : MonoBehaviour
         Instance.UnitInterfaces.Remove(_Unit);
     }
 
-    public static void ShowProductionDisplay(Unit _Unit)
+    public static void ShowProgressDisplay(Unit _Unit, float _Value)
     {
         // If we have already got the unit Registered, we should not add a new one as this would try an error
         // when inserting a dupe key to a Dictionary
         if (Instance.UnitInterfaces.ContainsKey(_Unit))
         {
             // Instead, we will call the update method.
-            UpdateProductionDisplay(_Unit);
+            UpdateProgressDisplay(_Unit, _Value);
 
             // And then return;
             return;
         }
 
         // Spawning the Prefab in the world.
-        GameObject spawned = Instantiate(Instance.ConstructionDisplayPrefab, Instance.transform);
+        GameObject spawned = Instantiate(Instance.ProgressDisplay, Instance.transform);
         Instance.UnitInterfaces.Add(_Unit, spawned);
 
-        TMP_Text textbox = spawned.GetComponentInChildren<TMP_Text>();
-
-        string template = textbox.text;
-
-        textbox.text = string.Format(template, "0");
+        Slider progressSlider = spawned.GetComponentInChildren<Slider>();
+        progressSlider.value = _Value;
     }
 
-    public static void UpdateProductionDisplay(Unit _Unit)
+    public static void UpdateProgressDisplay(Unit _Unit, float _Value)
     {
         if (!Instance.UnitInterfaces.ContainsKey(_Unit))
         {
@@ -190,16 +188,11 @@ public class UserInterfaceManager : MonoBehaviour
         // Get the UI GameObject from the Dictionary
         GameObject ui = Instance.UnitInterfaces[_Unit];
 
-        TMP_Text textbox = ui.GetComponentInChildren<TMP_Text>();
-
-        string template = textbox.text;
-        float constructionAmount = ((float)_Unit.RemainingHitPoints / _Unit.StartingHitPoints) * 100f;
-
-        //textbox.text = string.Format(template, constructionAmount);
-        textbox.text = string.Format("Building {0}%...", constructionAmount);
+        Slider progressSlider = ui.GetComponentInChildren<Slider>();
+        progressSlider.value = _Value;
     }
 
-    public static void DestroyProductionDisplay(Unit _Unit)
+    public static void DestroyProgressDisplay(Unit _Unit)
     {
         if (!Instance.UnitInterfaces.ContainsKey(_Unit))
         {

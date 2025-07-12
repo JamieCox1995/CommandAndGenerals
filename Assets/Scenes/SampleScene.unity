@@ -658,6 +658,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConstructionDisplayPrefab: {fileID: 1328129530487253207, guid: b94c9b9aa4b016a4a9d5d7d23404f1ca, type: 3}
   HealthDisplayPrefab: {fileID: 1861377860241694781, guid: 6e772a70fab096b43a7431439ca5329e, type: 3}
+  ProgressDisplay: {fileID: 1861377860241694781, guid: 7076f713248a9d941a96759a274352ab, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

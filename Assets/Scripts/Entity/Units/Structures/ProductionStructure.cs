@@ -111,12 +111,15 @@ public class ProductionStructure : StructureUnit
         float buildPercentage = 0f;
         float timeElapsed = 0f;
 
+        UserInterfaceManager.ShowProgressDisplay(this, buildPercentage);
+
+
         while (timeElapsed < _currentProduction.ProductionTime)
         {
             // Update the build percentage and UI
             buildPercentage = timeElapsed / _currentProduction.ProductionTime;
 
-            //UserInterfaceManager.
+            UserInterfaceManager.UpdateProgressDisplay(this, buildPercentage);
 
             yield return new WaitForSeconds(0.5f);
 
@@ -138,6 +141,7 @@ public class ProductionStructure : StructureUnit
             }
         }
 
+        UserInterfaceManager.DestroyProgressDisplay(this);
         _currentProduction = null;
     }
 }
