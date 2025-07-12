@@ -121,8 +121,12 @@ public class UserInterfaceManager : MonoBehaviour
         Instance.UnitInterfaces.Add(_Unit, spawned);
 
         TMP_Text textbox = spawned.GetComponentInChildren<TMP_Text>();
-
         string template = textbox.text;
+
+        if(spawned.TryGetComponent(out UserInterfaceTextTemplate textTemplate))
+        {
+            template = textTemplate.TextTemplate;
+        }
 
         textbox.text = string.Format(template, "0");
     }
@@ -142,7 +146,14 @@ public class UserInterfaceManager : MonoBehaviour
         string template = textbox.text;
         float constructionAmount = ((float)_Unit.RemainingHitPoints / _Unit.StartingHitPoints) * 100f;
 
-        textbox.text = string.Format(template, constructionAmount.ToString("N0"));
+        if (ui.TryGetComponent(out UserInterfaceTextTemplate textTemplate))
+        {
+            template = textTemplate.TextTemplate;
+        }
+
+        string textToDisplay = constructionAmount.ToString("N0");
+
+        textbox.text = string.Format(template, textToDisplay);
         //textbox.text = string.Format("Building {0}%...", constructionAmount);
     }
 
