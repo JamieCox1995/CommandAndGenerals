@@ -140,12 +140,6 @@ public class SelectionManager : MonoBehaviour
 
     private void HandleMouseClicks()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            OnLeftClick();
-        }
-
-
         // If we are holding down the mouse button, we want to draw a box to screen to represent a drag selection.
         if (Input.GetMouseButton(0))
         {
@@ -164,6 +158,11 @@ public class SelectionManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
+            if(Vector2.Distance(_mouseDragStartLocation, _mouseCurrentDragLocation) < 10)
+            {
+                OnLeftClick();
+            }
+
             //Reset all of the variables which we were using to determine the size of the drag selection.
             _isMouseHeldDown = false;
             _mouseDragStartLocation = Vector2.zero;
@@ -175,6 +174,12 @@ public class SelectionManager : MonoBehaviour
     {
         if (_isMouseHeldDown) 
         {
+            // If we have not dragged very much, we just want to return
+            if (Vector2.Distance(_mouseDragStartLocation, _mouseCurrentDragLocation) < 10)
+            {
+                return;
+            }
+
             // Enabling the UI element for the box
             UIMouseDrag.gameObject.SetActive(true);
 
@@ -200,20 +205,39 @@ public class SelectionManager : MonoBehaviour
                 Vector2 screenPos = Camera.main.WorldToScreenPoint(ent.gameObject.transform.position);
 
                 // Now we want to check to see if the current entity's location is within the selection bounds.
+
+                // We want to check to see what selection mode we are in
+
+                // If we are in additive, we add what is in the bounds and keep whatever is already selected.
+
                 if(IsEntityInSelection(screenPos, selectionBounds))
                 {
-                    if (!_selectedEntities.ContainsKey(ent.ID))
+                    if(_selectionMode == EntitySelectionMode.Subtractive)
                     {
-                        _selectedEntities.Add(ent.ID, ent);
-                        ent.SelectEntity();
+                        if (_selectedEntities.ContainsKey(ent.ID))
+                        {
+                            _selectedEntities.Remove(ent.ID);
+                            ent.DeslectEntity();
+                        }
+                    }
+                    else
+                    {
+                        if (!_selectedEntities.ContainsKey(ent.ID))
+                        {
+                            _selectedEntities.Add(ent.ID, ent);
+                            ent.SelectEntity();
+                        }
                     }
                 }
                 else
                 {
-                    if (_selectedEntities.ContainsKey(ent.ID))
+                    if(_selectionMode == EntitySelectionMode.Normal)
                     {
-                        _selectedEntities.Remove(ent.ID);
-                        ent.DeslectEntity();
+                        if (_selectedEntities.ContainsKey(ent.ID))
+                        {
+                            _selectedEntities.Remove(ent.ID);
+                            ent.DeslectEntity();
+                        }
                     }
                 }
             }
