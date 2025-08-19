@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class Unit : Entity, IOrderableEntity
 {
+    [Header("Hit Points:")]
     public int StartingHitPoints = 100;
 
     public int RemainingHitPoints { get { return _remainingHitPoints; } }
     protected int _remainingHitPoints = 0;
 
     public bool StartsAtFullHealth = true;
+
+    // This is the index of the team
+    protected int _teamOwner; 
 
     protected Queue<EntityOrder> _orders = new Queue<EntityOrder>();
     protected EntityOrder _currentOrder;

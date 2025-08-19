@@ -1,22 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class TeamData
 {
     public int PlayerIndex { get { return _playerIndex; } }
     private int _playerIndex;
 
     public int TeamIndex { get { return _teamIndex; } }
-    private int _teamIndex;
+    [SerializeField] private int _teamIndex;
 
     public int FactionID { get { return _factionId; } }
-    private int _factionId;                             // 0 - Neutral, 1 - Humans, 2 - Robots.
+    [SerializeField] private int _factionId;                             // 0 - Neutral, 1 - Humans, 2 - Robots.
 
     public bool PlayerControlled { get { return _isPlayerControlled; } }
-    private bool _isPlayerControlled;
+    [SerializeField] private bool _isPlayerControlled;
 
-    public TeamResources Resources;
+    public Color TeamColor { get { return _teamColor; } }
+    [SerializeField] private Color _teamColor;
+
+    [SerializeField] public TeamResources Resources;
 
     public TeamData(int _PlayerIndex, int _TeamIndex, int _FactionID, bool _IsPlayerControlled)
     {
@@ -35,10 +40,11 @@ public class TeamData
     }
 }
 
+[Serializable]
 public class TeamResources
 {
     public decimal Cash { get { return _cash; } }
-    private decimal _cash;
+    [SerializeField] private decimal _cash;
 
     public TeamResources()
     {
