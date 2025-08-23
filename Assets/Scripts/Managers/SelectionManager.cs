@@ -9,6 +9,8 @@ public class SelectionManager : MonoBehaviour
 {
     public static SelectionManager Instance;
 
+    private int _playerTeamIndex;
+
     public Image UIMouseDrag;
 
     private Dictionary<int, Entity> _selectedEntities = new Dictionary<int, Entity>();
@@ -52,6 +54,11 @@ public class SelectionManager : MonoBehaviour
 
             if (ent != null)
             {
+                if(ent.TeamIndex != _playerTeamIndex)
+                {
+                    return;
+                }
+
                 // If we are over a selectable entity;
                 switch (_selectionMode)
                 {
@@ -203,6 +210,11 @@ public class SelectionManager : MonoBehaviour
                 // Getting the screen location of the current entity
                 Entity ent = entities[index];
                 Vector2 screenPos = Camera.main.WorldToScreenPoint(ent.gameObject.transform.position);
+
+                if(ent.TeamIndex != _playerTeamIndex)
+                {
+                    continue;
+                }
 
                 // Now we want to check to see if the current entity's location is within the selection bounds.
 

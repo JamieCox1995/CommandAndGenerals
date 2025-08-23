@@ -10,6 +10,8 @@ public class EntityManager : MonoBehaviour
     public List<Entity> SpawnableEntities = new List<Entity>();
     private List<Entity> _spawnedEntities = new List<Entity>();
 
+    public bool AutoBuildStructures = false;
+
     public const int MAX_ENTITY_COUNT = 2048;
 
     // Start is called before the first frame update
@@ -92,6 +94,34 @@ public class EntityManager : MonoBehaviour
 
         spawnedEntity.InitializeEntity(_spawnedEntities.Count);
         _SpawnSuccess = true;
+        return spawnedEntity;
+    }
+
+    public Entity SpawnEntity(int _RequestedIndex, Vector3 _SpawnLocation, int _TeamIndex, out bool _SpawnSuccess)
+    {
+        if (SpawnableEntities.Count < _RequestedIndex)
+        {
+            _SpawnSuccess = false;
+            return null;
+        }
+
+        if (_spawnedEntities.Count >= MAX_ENTITY_COUNT)
+        {
+            _SpawnSuccess = false;
+            return null;
+        }
+
+        Entity spawnedEntity = Instantiate(SpawnableEntities[_RequestedIndex], _SpawnLocation, Quaternion.identity);
+        _spawnedEntities.Add(spawnedEntity);
+
+        spawnedEntity.InitializeEntity(_spawnedEntities.Count, _TeamIndex);
+        _SpawnSuccess = true;
+
+        if (spawnedEntity.TryGetComponent<StructureUnit>(out StructureUnit structure))
+        {
+            structure.TakeDamage(-structure.StartingHitPoints);
+        }
+
         return spawnedEntity;
     }
 

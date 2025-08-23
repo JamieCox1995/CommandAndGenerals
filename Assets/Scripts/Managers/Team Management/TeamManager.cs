@@ -42,21 +42,33 @@ public class TeamManager : MonoBehaviour
 
     public static void DeployInitialUnits()
     {
-        // Now for each team, we are going to spawn in their command structure
-        for(int index = 0; index < Instance.TeamData.Count; index++)
+        // We wabt to instantly build the initial buildings for each team.
+        EntityManager.Instance.AutoBuildStructures = true;
+
+        // TODO: We need to create objects which will represent the possible starting locations for a team.
+        // Getting the spawn locations for the map.
+        GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("Spawn Location");
+
+        if (spawnLocations.Length == 0)
         {
-            // TODO: We need to create objects which will represent the possible starting locations for a team.
+            Debug.LogWarning("WARNING: No spawn locations found.");
+            return;
+        }
+
+        // Now for each team, we are going to spawn in their command structure
+        for (int index = 0; index < Instance.TeamData.Count; index++)
+        {
             // TODO: There should be a structure which will allow factions to easily dictate their variants for units, structures, etc.
 
-            // TEMPORARY: Generating a position within a 50-unit radius to be the starting location.
             Vector3 startingLocation;
-
-            startingLocation = Random.insideUnitSphere * 50f;
-            startingLocation.y = 0f;
+            startingLocation = spawnLocations[index].transform.position;
 
             // Spawn in the Command Centre
-            EntityManager.Instance.SpawnEntity(0, startingLocation, out bool success);
+            EntityManager.Instance.SpawnEntity(1, startingLocation, index, out bool success);
         }
+
+        // Need to set the buildings to not be built instantly.
+        EntityManager.Instance.AutoBuildStructures = false;
     }
 
     public static decimal GetTeamCash(int _TeamIndex)
